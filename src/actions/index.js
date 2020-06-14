@@ -15,6 +15,7 @@ export function signinUser({ username, password }) {
         dispatch(signinUserSuccess(response.data.content.username));
         // - Save the JWT token
         setToken(response.data.token);
+        console.log('token',response.data.token);
         // - redirect to the route '/dashboard'
         browserHistory.push('/dashboard');
       })

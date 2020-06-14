@@ -20,12 +20,12 @@ injectTapEventPlugin();
 
 const store = configureStore();
 
-const token = getToken();
+/* const token = getToken();
 // If we have a token, consider the user to be signed in
 if (token) {
     store.dispatch({ type: ACTIVE_SESSION });
     store.dispatch(getCurrentUser());
-}
+} */
 
 render(
     <Provider store={store}>

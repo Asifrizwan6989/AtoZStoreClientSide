@@ -18,7 +18,6 @@ export default (
      <Route path="signout" component={SignoutPage} />
     <Route path="signup" component={SignupPage} />
     <Route path="dashboard" component={RequireAuth(Dashboard)} />
-
     <Route path="*" component={NotFoundPage} />
   </Route>
 );

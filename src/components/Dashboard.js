@@ -1,146 +1,57 @@
-import React, { Component, PropTypes } from 'react';
-import { Link } from 'react-router';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { reduxForm, Field, SubmissionError } from 'redux-form';
-import { Card, CardText } from 'material-ui/Card';
-import TextField from 'material-ui/TextField'
-import toastr from 'toastr';
-
-import { getCurrentUser, updateUser, resetValidateFields } from '../actions';
-import renderTextField from '../utils/renderTextField';
-
-const marginLeft = {
-  marginLeft: 12
-};
-
-const validate = values => {
-  const errors = {};
-  const requiredFields = ['email'];
-  requiredFields.forEach(field => {
-    if (!values[field]) {
-      errors[field] = 'Required'
-    }
-    if (values.email && !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
-      errors.email = 'Invalid email address'
-    }
-  });
-  return errors;
-}
+import { addProduct, updateProduct } from '../actions/ProductAction';
+import './Home.css';
 
 class Dashboard extends Component {
   constructor(props) {
     super(props);
-
-    this.state = {
-      user: Object.assign({}, this.props.user)
-    };
-
-    this.handleChange = this.handleChange.bind(this);
-    this.handleFormSubmit = this.handleFormSubmit.bind(this);
-  }
-
-  componentWillMount() {
-    this.props.getCurrentUser();
-  }
-
-  componentWillReceiveProps(nextProps) {
-    this.setState({ user: Object.assign({}, nextProps.user) });
-  }
-
-  handleChange(event) {
-    // to clean up notifications
-    this.props.resetValidateFields();
-
-    const field = event.target.name;
-    let user = this.state.user;
-    user[field] = event.target.value;
-    return this.setState({ user: user });
-  }
-
-
-  handleFormSubmit() {
-    this.props.updateUser(this.state.user);
-  }
-
-  Notify() {
-    if (this.props.errorMessage) {
-      toastr.error(this.props.errorMessage);
-    }
-    if (this.props.messsage) {
-      toastr.success(this.props.messsage);
-    }
-  }
-
-  componentWillUnmount() {
-    this.props.resetValidateFields();
   }
 
   render() {
-    const { handleSubmit, handleChange, pristine, reset, submitting, fields: { name, username, email } } = this.props;
+    const products = this.props.products;
+    console.log('product list',products);
+    const { addProduct, updateProduct } = this.props;
+    var list = products.map((product) => {
+      return (
+        <div className="product_style" key={product.productId}>
+          <img src={product.imageURL} alt="image" width="20%" height="20%" />
+          <p>
+            Quantity :
+            <input
+              id="field"
+              type="text"
+              onChange={(e) =>
+                updateProduct(product.productId,e.target.value)
+              }
+              value={product.weight}
+            />
+          </p>
+        </div>
+      );
+    });
+
     return (
-      <Card class="row col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2 card-shadow ">
-        <form onSubmit={handleSubmit(this.handleFormSubmit)}>
-          <h2 class="card-heading heading">Profile Setting</h2>
-
-          {this.Notify()}
-
-          <div>
-            <TextField
-              name="name"
-              value={this.state.user.name}
-              onChange={this.handleChange}
-              floatingLabelText="name" />
-          </div>
-          <div>
-            <TextField
-              name="username"
-              disabled={true}
-              value={this.props.user.username}
-              floatingLabelText="username" />
-          </div>
-          <div>
-            <TextField
-              name="email"
-              value={this.state.user.email}
-              onChange={this.handleChange}
-              floatingLabelText="email" />
-          </div>
-
-          <div class="button-line pull-right">
-            <button type="submit"
-              class="btn btn-primary">
-              Update
-            </button>
-
-            <button type="button"
-              class="btn btn-secondary"
-              onClick={reset}
-              disabled={pristine || submitting}
-              style={marginLeft}>
-              Cancel
-            </button>
-          </div>
-          <div>
-          </div>
-        </form>
-      </Card>
+      <div>
+        <h1> List of Products</h1>
+        {list}
+        <br />
+        <button onClick={(e) => addProduct(e.target.value)}>Add Item</button>
+      </div>
     );
   }
-
 }
 
-function mapStateToProps(state) {
+const mapStateToProps = (state) => {
   return {
-    user: state.user.data || { name: '', username: '', email: '' },
-    errorMessage: state.user.error,
-    messsage: state.user.messsage
+    products: state.productList
   };
-}
+};
 
-const form = reduxForm({
-  form: 'dashboard',
-  fields: ['name', 'username', 'email'],
-  validate
+const mapDispatchToProps = (dispatch) => ({
+  addProduct: (productName) => dispatch(addProduct(productName)),
+  updateProduct: (productId, updateQuantity) =>
+    dispatch(updateProduct(productId, updateQuantity)),
 });
 
-export default connect(mapStateToProps, { getCurrentUser, updateUser, resetValidateFields })(form(Dashboard));
+export default connect(mapStateToProps, mapDispatchToProps)(Dashboard);
