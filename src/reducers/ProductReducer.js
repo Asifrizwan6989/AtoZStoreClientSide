@@ -1,5 +1,5 @@
 
-const listedproduct =[
+const listedproduct = [
   {
     "productId": 1,
     "category": "Veggies",

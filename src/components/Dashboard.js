@@ -12,7 +12,7 @@ class Dashboard extends Component {
     const products = this.props.products;
     console.log('product list',products);
     const { addProduct, updateProduct } = this.props;
-    var list = products.map((product) => {
+    var list = products.listedproduct.map((product) => {
       return (
         <div className="product_style" key={product.productId}>
           <img src={product.imageURL} alt="image" width="20%" height="20%" />
