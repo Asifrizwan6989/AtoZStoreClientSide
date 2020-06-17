@@ -17,7 +17,7 @@ class Dashboard extends Component {
         <div className="product_style" key={product.productId}>
           <img src={product.imageURL} alt="image" width="20%" height="20%" />
           <p>
-            Quantity :
+            Quantity : 
             <input
               id="field"
               type="text"
@@ -33,10 +33,10 @@ class Dashboard extends Component {
 
     return (
       <div>
-        <h1 > List of Products</h1>
-        <div >{list}</div>
+        <h1 id="headline"> List of Products</h1>
+        <div id="imgList">{list}</div>
         <br />
-        <button onClick={(e) => addProduct(e.target.value)}>Add Item</button>
+        <button id="addbtn" onClick={(e) => addProduct(e.target.value)}>Add Item</button>
       </div>
     );
   }
